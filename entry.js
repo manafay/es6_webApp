@@ -123,38 +123,41 @@ const htmlAttributes = ['accept',
 'wrap',
 ];
 
+
+const transformAttribute = { className: 'class', htmlFor: 'for', onClick: 'on-click' };
+
+const transformAttrKey = (key) => {
+  if (Object.keys(transformAttribute).includes(key)) {
+    return transformAttribute[key];
+  }
+  return key;
+};
+
 const isAllowedAttribute = (attr) => {
   const result = {};
   if (attr) {
     Object.keys(attr).forEach((key) => {
-      if (htmlAttributes.includes(key)) {
-        result.key = attr[key];
+      if (typeof attr[key] === 'function') {
+        result[`${transformAttrKey(key)}`] = attr[key];
+      } else if (htmlAttributes.includes(key)) {
+        result[`${key}`] = attr[key];
       }
     });
   }
   return result;
 };
 
-const transformAttribute = { className: 'class', htmlFor: 'for', onClick: 'on-click' };
-
-const transformAttrKey = (key) => {
-  if (transformAttribute.key !== undefined) {
-    return transformAttribute.key;
-  }
-  return key;
-};
-
 const getAttributes = (attr) =>
-Object.keys(attr).map((key) => `${transformAttrKey(key)}="${attr[key]}"`);
+Object.keys(attr).map((key) => ` ${transformAttrKey(key)}="${attr[key]}"`).join(' ');
 
-const fetchChildren = (children) => children.map((elem) => `${elem} \n`);
+const fetchChildren = (children) => children.map((elem) => `${elem}`).join('\n');
 
 function createElement(tag, props, ...args) {
-  return `< ${tag}  ${getAttributes(isAllowedAttribute(props))}> ${fetchChildren(args)} </${tag}>`;
+  return `<${tag}${getAttributes(isAllowedAttribute(props))}>${fetchChildren(args)}</${tag}>`;
 }
 
 
 const child1 = createElement('li', null, 'Welcome to the world of React');
 const child2 = createElement('li', null, 'Build Resuable components');
-const className = { className: 'react', htmlFor: 'react-native' };
+const className = { className: 'react', htmlFor: 'react-native', onClick: () => 'hello' };
 console.log(createElement('h1', className, child1, child2));
