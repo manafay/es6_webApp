@@ -156,8 +156,15 @@ function createElement(tag, props, ...args) {
   return `<${tag}${getAttributes(isAllowedAttribute(props))}>${fetchChildren(args)}</${tag}>`;
 }
 
+function render(reactElement, container) {
+  const listener = container;
+  listener.innerHTML = reactElement;
+}
+
 
 const child1 = createElement('li', null, 'Welcome to the world of React');
 const child2 = createElement('li', null, 'Build Resuable components');
 const className = { className: 'react', htmlFor: 'react-native', onClick: () => 'hello' };
 console.log(createElement('h1', className, child1, child2));
+const root = createElement('h1', className, child1, child2);
+render(root, document.getElementById('root'));
