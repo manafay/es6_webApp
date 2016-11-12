@@ -1,3 +1,5 @@
+import { createStore, getState, dispatch, reducer } from './redux';
+
 const htmlAttributes = ['accept',
 'acceptCharset',
 'accessKey',
@@ -167,4 +169,5 @@ const child2 = createElement('li', null, 'Build Resuable components');
 const className = { className: 'react', htmlFor: 'react-native', onClick: () => 'hello' };
 console.log(createElement('h1', className, child1, child2));
 const root = createElement('h1', className, child1, child2);
+console.log(createStore(reducer(getState(), dispatch('INCREMENT'))));
 render(root, document.getElementById('root'));
