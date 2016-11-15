@@ -1,36 +1,32 @@
 
-function createAction(actionType) {
-  const action = {};
-  if (actionType) {
-    action.type = actionType;
+
+function createStore(state) {
+  let globalState = { count: 0 };
+  const listeners = [];
+
+  const getState = () => globalState;
+
+  function createAction(actionType) {
+    const action = {};
+    if (actionType) {
+      action.type = actionType;
+    }
+    return action;
   }
-  return action;
+
+  const action = (actionType) => createAction(actionType);
+
+  const dispatch = (actionType) => {
+    action(actionType);
+    if (globalState !== state) {
+      globalState = state;
+    }
+    listeners.forEach(l => l);
+  };
+
+  const subscribe = (listener) => listeners.push(listener);
+
+  return { getState, dispatch, subscribe };
 }
 
-const action = (actionType) => createAction(actionType);
-
-export const dispatch = (actionType) => action(actionType);
-
-let globalState = { count: 0 };
-
-export const getState = () => globalState;
-
-export const setState = (state) => {
-  globalState = state;
-};
-
-export function reducer(prevState, currentAction) {
-  switch (currentAction.type) {
-    case 'INCREMENT':
-      return { count: prevState.count + 2 };
-    case 'DECREMENT':
-      return { count: prevState.count - 2 };
-    default:
-      return prevState;
-  }
-}
-
-export function createStore(state) {
-  const oldState = getState();
-  return setState(Object.assign({}, oldState, state));
-}
+export default createStore;

@@ -1,4 +1,5 @@
-import { createStore, getState, dispatch, reducer } from './redux';
+import createStore from './redux';
+import { reducer } from './utils';
 
 const htmlAttributes = ['accept',
 'acceptCharset',
@@ -169,5 +170,9 @@ const child2 = createElement('li', null, 'Build Resuable components');
 const className = { className: 'react', htmlFor: 'react-native', onClick: () => 'hello' };
 console.log(createElement('h1', className, child1, child2));
 const root = createElement('h1', className, child1, child2);
-console.log(createStore(reducer(getState(), dispatch('INCREMENT'))));
+
+const store = createStore(reducer({ count: 5 }, 'INCREMENT'));
+
+store.dispatch('INCREMENT');
+console.log(store.getState());
 render(root, document.getElementById('root'));
